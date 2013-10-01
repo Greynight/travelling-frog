@@ -1,0 +1,62 @@
+doctype 5
+html(lang="en")
+    head
+        title Travelling-frog
+
+        link(rel='stylesheet', href='/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/css/bootstrap-responsive.min.css')
+        link(rel='stylesheet', href='/css/styles.css')
+        link(type='image/x-icon', href='/img/favicon.png', rel='shortcut icon')
+
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+    body
+
+        header.navbar.navbar-fixed-top
+            div.navbar-inner
+                div.container-fluid
+                    div.hidden-phone Travelling-frog-desctop
+                        a(href='/')
+                            img#frog(src="/img/frog_cr_prozr.png")
+                        - if (!isAuth)
+                            include includes/signup
+                            include includes/login
+                        - else
+                            include includes/logout
+
+                    div.visible-phone Travelling-frog-mobile
+                        include includes/signup
+                        include includes/login
+
+        div.container-fluid
+            div.row-fluid
+
+                nav.well.sidebar-nav.left.black
+                    ul.nav.nav-list
+                        include includes/menu
+
+                div.well.black.sidebar-nav.right.hidden-phone.hidden-tablet
+                    div#myCanvasContainer
+                        canvas#myCanvas
+                            a(href="http://google.com") Google
+                            a(href="http://rambler.ru") Rambler
+                            a(href="http://google.com") Google
+                            a(href="http://rambler.ru") Rambler
+                            a(href="http://google.com") Google
+                            a(href="http://rambler.ru") Rambler
+                    ul
+                        include includes/last-reports
+
+                div.content
+                    block content
+                        p   #{out}
+
+        footer.navbar-fixed-bottom
+            div#bottom &copy; Grey 2013
+            img#tent(src='/img/tent.png')
+
+        script(src='/libs/jquery-1.9.1.min.js')
+        script(src='/libs/bootstrap.min.js')
+        script(src='/libs/tagcanvas.js')
+        script(src='/js/scripts.js')
+        script(src='/js/photos.js')

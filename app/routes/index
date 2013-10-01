@@ -1,0 +1,81 @@
+module.exports = function(app, models, classes)
+{
+    app.all('*', function(req, res, next)
+    {
+        var url = req.url;
+
+        models.actions.find({'path' : url}, function (err, action)
+        {
+            if (err)
+            {
+                //TODO
+            }
+            else
+            {
+                if (!action[0])
+                {
+                    next();
+                }
+                else
+                {
+                    var neededRole = action[0].role;
+                    req.session.role = !!req.session.role ? req.session.role : 1;
+
+                    if (req.session.role >= neededRole)
+                    {
+                        next();
+                    }
+                    else
+                    {
+                        res.redirect('/');
+                    }   
+                }
+            }
+        })
+    });
+
+    app.get('*', classes.report.showLast, function(req, res, next)
+    {
+        models.actions.find({}, function (err, action)
+        {
+            if (err)
+            {
+                //TODO
+            }
+            else
+            {
+                var i = 0,
+                    actions = [];
+
+                req.session.role = !!req.session.role ? req.session.role : 1;
+
+                for (i in action)
+                {
+                    if (req.session.role >= action[i].role)
+                    {
+                        actions.push(action[i]);
+                    }
+                }
+
+                res.locals.actions = actions;
+                res.locals.isAuth = !!req.session.user ? true : false ;
+
+                next();
+            }
+        })
+    });
+
+    app.get('/', function(req, res)
+    {
+        models.texts.find(function (err, text)
+        {
+            var content = text[0].content.ru;
+
+            res.render('index',
+            {
+                out: content
+            });
+      
+        })
+    });
+};

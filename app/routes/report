@@ -1,0 +1,30 @@
+module.exports = function(app, models, classes)
+{
+    app.get('/report/show', function(req, res) {
+        res.render('report', {
+	    title: 'Users'
+	    });
+    });
+
+    app.get('/report/add', classes.report.add, function(req, res) 
+    {
+        //render add report form
+        res.render('report_add', {});
+    });
+
+    app.post('/report/save', function(req, res) 
+    {
+        classes.report.save(req, res);
+    });
+
+    app.get('/report/edit', function(req, res) {
+        res.render('report', {
+	    title: 'Reports'
+	    });
+    });
+
+    app.get('/report/browse', function(req, res) 
+    {
+        res.render('report_browse', {});
+    });
+};

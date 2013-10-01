@@ -1,0 +1,19 @@
+extends index
+
+block content
+    div#text-container.report
+        form#report-form(action='/report/save', method='post')
+            input#report-title(type="text", name="report-title")
+            br
+            br
+            div#report-text(resizable="true", contenteditable="true")
+            br
+            br
+            input#file-field(type="file", name="file[]", multiple="multiple")
+            br
+            br
+            input#send-report(type="submit", value="Save new report")
+
+    div#img-container.report
+        ul#img-list
+

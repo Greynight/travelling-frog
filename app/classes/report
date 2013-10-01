@@ -1,0 +1,124 @@
+module.exports = function(models, modules)
+{
+    var report = 
+    {
+        'add' : function(req, res, next)
+        {
+            if (!req.session.reportId)
+            {
+                // TODO replace show: 3 with constant
+                var newReport = new models.reports({date: new Date, show: 3, user: req.session._id});
+
+                newReport.save(function (err, newReport)
+                {
+                    if (err)
+                    {
+                        // TODO handle the error
+                        console.log(err);
+                    }
+                    else
+                    {
+                        //save report id to the session
+                        req.session.reportId = newReport._id;
+                        next();
+                    }
+                });
+            }
+            else
+            {
+                next();
+            }
+        },
+
+        'save' : function(req, res)
+        {
+
+            if (req.body && req.body.report)
+            {
+                var report      = req.body.report,
+                    reportId    = req.session.reportId,
+                    query       = {_id:reportId},
+                    title       = req.body.title;
+
+                models.reports.find(query, function (err, db_report)
+                {
+                    if (db_report.length == 1)
+                    {
+                        models.reports.update(query,
+                        {
+                            $set:
+                            {
+                                // TODO change show to constant
+                                'show': 1,
+                                'text': report,
+                                'title': title
+                            }
+                        },
+                        function(err, new_report)
+                        {
+                            if (err)
+                            {
+                                //TODO error handler
+                                res.send({result:'wrong'});
+                            }
+                            else
+                            {
+                                req.session.reportId = null;
+                                //TODO some message for user
+                                res.send({result:'successful'});
+                            }
+                        });
+                    }
+                    else
+                    {
+                        //TODO error handler
+                        res.send({result:'wrong'});
+                    }
+                })
+            }
+            else
+            {
+                res.send({result:'wrong'});
+            }
+        },
+
+        'edit' : function()
+        {
+
+        },
+
+        'delete' : function()
+        {
+
+        },
+
+        'show' : function()
+        {
+
+        },
+        //just example
+        'showLast' : function(req, res, next)
+        {
+            models.reports.find({}, null, {sort: {date: -1}, limit: 10}, function (err, last)
+            {
+                if (err)
+                {
+                    //TODO handle the error
+                }
+                else
+                {
+                    res.locals.last = last;
+                    next();
+                }
+                
+            })
+        },
+
+        'showCategory' : function()
+        {
+
+        }
+    }
+
+return report;
+}

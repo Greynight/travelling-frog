@@ -1,0 +1,12 @@
+module.exports = function(mongoose)
+{
+    var schemaActions = mongoose.Schema({
+        path: String,
+        label: String,
+        role: Number
+    })
+
+this.model = mongoose.model('actions', schemaActions);
+
+return this;
+}

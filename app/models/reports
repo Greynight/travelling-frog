@@ -1,0 +1,14 @@
+module.exports = function(mongoose)
+{
+    var schemaReports = mongoose.Schema({
+        title: String,
+        text: String,
+        show: Number,
+        user: String,
+        date: Date
+    })
+
+this.model = mongoose.model('reports', schemaReports);
+
+return this;
+}

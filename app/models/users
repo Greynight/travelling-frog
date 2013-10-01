@@ -1,0 +1,16 @@
+module.exports = function(mongoose)
+{
+    var schemaUsers = mongoose.Schema({
+        name: String,
+        pass: String,
+        email: String,
+        role: Number,
+        pass: String,
+        status: String,
+        _id: String
+    })
+
+this.model = mongoose.model('users', schemaUsers);
+
+return this;
+}

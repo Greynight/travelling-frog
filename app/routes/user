@@ -1,0 +1,49 @@
+module.exports = function(app, models, classes)
+{
+    app.post('/user/login', function(req, res) 
+    {
+        //add validation on client side
+        classes.user.login(req, res);
+    });
+
+    app.all('/user/logout', function(req, res) 
+    {
+        req.session.destroy(function()
+        {
+            res.redirect('/');
+        });
+    });
+
+    app.post('/user/register', function(req, res) 
+    {
+        classes.user.registration(req, res);
+    });
+
+    app.get('/user/confirm', function(req, res) 
+    {
+        classes.user.add(req, res);
+    });
+
+    app.post('/user/save', function(req, res)
+    {
+        classes.user.save(req, res);
+    });
+
+    app.get('/user/edit', function(req, res) {
+        res.render('user', {
+	    title: 'Users'
+	    });
+    });
+
+    app.get('/user/show', function(req, res) {
+        res.render('user', {
+	    title: 'Users'
+	    });
+    });
+
+    app.get('/user/browse', function(req, res) {
+        res.render('user', {
+	    title: 'Users'
+	    });
+    });
+};

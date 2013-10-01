@@ -1,0 +1,17 @@
+{
+ "name":"Travelling-frog",
+  "version":"0.0.1",
+  "dependencies":{
+      "express":"latest",
+      "mongoose": "latest",
+      "mongodb": "latest",
+      "jade": "latest",
+      "url": "latest",
+      "connect-mongodb": "latest",
+      "fs": "latest",
+      "http": "latest",
+      "crypto": "latest",
+      "url": "latest",
+      "nodemailer": "latest"
+  }
+}

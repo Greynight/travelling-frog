@@ -1,0 +1,183 @@
+nav
+{
+    background-color: #000;
+    color: #00f000;
+    max-width: 200px;
+}
+
+.black
+{
+    background-color: #000;
+    color: #00f000;
+    border: #00ff00 1px solid;
+}
+
+body 
+{
+    padding-top: 100px;
+    padding-bottom: 50px;
+    /*background-image: url("/img/grass.jpg");
+    background-repeat: repeat;*/
+    /*background-image: url("/img/3_url.jpeg");*/
+    /*background-color: #cee8b1;*/
+    /*background-color: #f3fbea;*/
+    background: url("/img/bg2.jpg") repeat fixed center #F1EDE0;
+}
+.sidebar-nav 
+{
+    padding: 9px 0;
+}
+
+.row-fluid > .sidebar-nav 
+{
+    position: relative;
+    top: 0;
+    left:auto;
+    width: 220px;
+}
+
+.left 
+{
+    float:left;
+    /*background-image: url("/img/sand-2-20.jpg");*/
+    /*background-repeat: repeat;*/
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.right 
+{
+    float:right;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+/*.fixed-fluid
+{
+    margin-left: 240px;
+}
+.fluid-fixed 
+{
+    margin-right: 240px;
+    margin-left:auto !important;
+}
+.fixed-fixed 
+{
+    margin: 0 240px;
+}*/
+
+.navbar-fixed-top, .navbar-fixed-bottom
+{
+    position: fixed;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+}
+
+.navbar-inner 
+{
+    height: 100px;
+    background-image: url("/img/sky100.jpg");
+    background-position: top;
+    background-repeat: repeat-x;
+    border: 0;
+}
+
+.navbar-fixed-top .navbar-inner
+{
+    padding: 0;
+}
+
+.content
+{
+    padding-top: 20px;
+    /*padding-left: 220px;*/
+    /*padding-right: 220px;*/
+}
+
+footer
+{
+    height: 50px;
+    background-image: url("/img/bottom_50_grass.png");
+    background-position: bottom;
+    background-repeat: repeat-x;
+}
+
+header
+{
+
+}
+
+#bottom
+{
+    color: white;
+    top: 25px;
+    left: 20px;
+    position: relative;
+}
+
+#tent
+{
+    position: relative;
+    right: 50px;
+    float: right;
+    bottom: 45px;
+}
+
+#myCanvas
+{
+    width: 220px;
+    height: 220px;
+}
+
+#frog
+{
+    position: absolute;
+    left: 170px;
+    /*top: 10px;*/
+    width: 120px;
+}
+
+#login, #logout
+{
+    text-align: right;
+    padding-right: 100px;
+}
+
+#enter-content
+{
+    /*position: relative;*/
+}
+
+#login-message
+{
+    color: red;
+}
+
+#img-container
+{
+    position: relative;
+    border: 2px dashed steelblue;
+    min-height: 200px;
+    width: 200px;
+    min-width: 200px;
+    vertical-align: top;
+}
+
+#text-container
+{
+    
+}
+
+.report
+{
+    display: table-cell;
+    width: 100%;
+}
+
+#report-text
+{
+    min-width: 90%;
+    min-height: 200px;
+    border: 1px #003f1a solid;
+}

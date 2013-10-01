@@ -1,0 +1,189 @@
+module.exports = function(models, modules)
+{
+    var user = 
+    {
+        'registration' : function(req, res)
+        {
+            var mail = req.body.user.mail,
+                that = this;
+
+            models.users.find({email: mail}, function (err, db_mails)
+            {
+                if (db_mails.length == 0)
+                {
+                    var generatedString = that.encryptPassword(Math.round(new Date().valueOf() * Math.random())),
+                        newUser = new models.users({email: mail, status: generatedString});
+
+                    newUser.save(function (err, newUser)
+                    {
+                        if (err)
+                        {
+                            // TODO handle the error
+                        }
+                    });
+
+                    //send link to the user
+                    that.confirm(mail, res, generatedString);
+                }
+                else
+                {
+                    res.send({sign: 'wrong_mail'});
+                }
+            })
+        },
+
+        'login' : function(req, res)
+        {
+            var user = req.body.user.name,
+                pass = this.encryptPassword(req.body.user.pass);
+
+            models.users.find({name: user, pass: pass, status: ''}, function (err, db_user)
+            {
+                if (db_user.length == 1)
+                {
+                    req.session.user = db_user[0].name;
+                    req.session.role = db_user[0].role;
+                    req.session._id = db_user[0]._id;
+
+                    res.send({login:'successful'});
+                }
+                else
+                {
+                    res.send({login: 'wrong'});
+                }
+            })
+        },
+
+        'confirm' : function(mail, res, generatedString)
+        {
+            var smtpTransport = modules.nodemailer.createTransport("SMTP",
+            {
+                service: "Gmail",
+                auth: 
+                {
+                    user: "",
+                    pass: ""
+                }
+            });
+
+            // setup e-mail data with unicode symbols
+            var mailOptions = 
+            {
+                from: "",
+                to: mail,
+                subject: "Confirmation of your registration on our website",
+                html: "Please press <a href = 'http://localhost:3000/user/confirm?code=" + generatedString + "'><b>this link</b></a> to finish your registration."
+            }
+
+            // send mail with defined transport object
+            smtpTransport.sendMail(mailOptions, function(error, response)
+            {
+                if(error)
+                {
+                    console.log(error);
+                    res.send({sign: 'wrong', error_text: error});
+                }
+                else
+                {
+                    console.log("Message sent: " + response.message);
+                    res.send({ sign:'successful'});
+                }
+
+                smtpTransport.close(); // shut down the connection pool, no more messages
+            });
+        },
+
+        'add' : function(req, res)
+        {
+            //if user from registration page
+            if (!!req.query && !!req.query.code)
+            {
+                models.users.find({status: req.query.code}, function (err, db_user)
+                {
+                    if (db_user.length == 1)
+                    {
+                        res.render('user_add',
+                        {
+                            'code' : req.query.code
+                        });
+                    }
+                    else
+                    {
+                        res.render('index',
+                        {
+                            'out' : 'Sorry, wrong activation code.'
+                        });
+                    }
+                })
+            }
+            else
+            {
+                res.render('user_add',{});
+            }
+        },
+
+        'save' : function(req, res)
+        {
+            var user = req.body.user.name,
+                pass = this.encryptPassword(req.body.user.pass),
+                code = req.body.user.code,
+                query = {status: code};
+
+            models.users.find(query, function (err, db_user)
+            {
+                if (db_user.length == 1)
+                {
+                    models.users.update(query,
+                    {
+                        $set:
+                        {
+                            'name' : user,
+                            'pass' : pass,
+                            'role' : 2,
+                            'status' : ''
+                        }
+                    },
+                    function(err, new_user)
+                    {
+                        if (err)
+                        {
+                            //TODO error handler res.send({ save:'error'});
+                            res.redirect('/');
+                        }
+                        else
+                        {
+                            req.session.user = user;
+                            req.session.role = 2;
+                            //TODO some message for user
+                            res.redirect('/');
+                        }
+                    });
+                }
+                else
+                {
+                    //TODO error handler res.send({ save:'error'});
+                    res.redirect('/');
+                }
+            })
+        },
+
+        'delete' : function()
+        {
+
+        },
+
+        'edit' : function()
+        {
+
+        },
+
+        'encryptPassword' : function(pass)
+        {
+            var salt = 'some salt';
+                
+            return modules.crypto.createHash('md5').update(pass+salt).digest('hex');
+        }
+    }
+
+return user;
+}

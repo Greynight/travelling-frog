@@ -1,0 +1,15 @@
+module.exports = function(mongoose)
+{
+    var schemaTexts = mongoose.Schema({
+        title: String,
+        content:
+        {
+            ru: String,
+            en: String
+        }
+    })
+
+this.model = mongoose.model('texts', schemaTexts);
+
+return this;
+}

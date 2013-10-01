@@ -1,0 +1,11 @@
+div#login
+    a#enter(href='#') Log In
+    div#enter-content.hide
+        form#login-form()
+            p#login-message
+            p Name
+            input#name(type="text", name="user[name]") 
+            p Password
+            input#pass(type="password", name="user[pass]") 
+            p 
+                input(type="submit", value="Log-in")

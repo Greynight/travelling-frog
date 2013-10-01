@@ -1,0 +1,7 @@
+module.exports = function(app, models, classes)
+{
+    app.post('/photo/upload', function(req, res) 
+    {
+        classes.photo.save(req, res);
+    });
+};

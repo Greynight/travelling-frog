@@ -1,0 +1,113 @@
+module.exports = function(models, modules)
+{
+    var photo = 
+    {
+        'save': function(req, res)
+        {
+            var fileData    = req.body.value,
+                fileName    = req.body.id,
+                base64Data  = fileData.replace(/^data:image\/jpeg;base64,/,""),
+                that        = this,
+                sharename   = '',
+                buffer      = new Buffer(base64Data, 'base64'),
+                filelen     = buffer.length,
+                data        = 
+                {
+                    "filename":fileName
+                },
+                options =
+                {
+                    host: 'open.ge.tt',
+                    port: 80,
+                    path: '',
+                    method: 'POST'
+                },
+                req = modules.http.request(options, function(response)
+                {
+                    response.setEncoding('utf8');
+                    response.on('data', function (chunk) 
+                    {console.log(chunk);
+                        var uploadUrl   = JSON.parse(chunk).upload.puturl,
+                            fileid      = JSON.parse(chunk).fileid,
+                            host        = modules.url.parse(uploadUrl).host,
+                            path        = modules.url.parse(uploadUrl).path,
+                            options     = 
+                            {
+                                host: host,
+                                port: 80,
+                                path: path,
+                                method: 'PUT'
+                            }
+
+                        var req1 = modules.http.request(options, function(response) 
+                        {
+                            response.on('data', function (chunk) 
+                            {
+                                console.log('Photo upload: ' + chunk);
+                                res.send({ file:fileid});
+                                return;
+                            });
+                            response.on('error', function (chunk) 
+                            {
+                                console.log('Photo upload error: ' + chunk);
+                            });
+                        });
+
+                        req1.setHeader('Content-Length', filelen);
+                        req1.on('error', function(e)
+                        {
+                            console.log('problem with request1: ' + e);
+                        });
+
+                        req1.write(buffer);
+                        req1.end();
+                    });
+                });
+
+            req.on('error', function(e)
+            {
+                console.log('problem with request: ' + e.message);
+            });
+
+            req.write(JSON.stringify(data));
+            req.end();
+        },        
+
+        'auth': function(that)
+        {
+            var data =
+            {
+                'apikey':'',
+                'email':'',
+                'password':''
+            };
+
+            var options =
+            {
+                host: 'open.ge.tt',
+                port: 80,
+                path: '/1/users/login',
+                method: 'POST'
+            };
+
+            var req = modules.http.request(options, function(res)
+            {
+                res.setEncoding('utf8');
+                res.on('data', function (chunk) 
+                {
+                    that['accesstoken'] = JSON.parse(chunk).accesstoken;
+                });
+            });
+
+            req.on('error', function(e)
+            {
+                console.log('problem with request: ' + e.message);
+            });
+
+            req.write(JSON.stringify(data));
+            req.end();
+        }
+    }
+
+return photo;
+}
